@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="个人技术博客 - 记录前端开发、编程与学习笔记" />
+  <title>何昀倬的技术博客</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#" id="brand-link">
+        <span class="brand-dot"></span>
+        <span>何昀倬的技术博客</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#" class="nav-link active" data-nav="home">首页</a>
+        <a href="#about" class="nav-link" data-nav="about">关于</a>
+        <a href="#contact" class="nav-link" data-nav="contact">联系</a>
+      </nav>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色模式">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 首页列表视图 -->
+    <section id="list-view">
+      <div class="hero">
+        <h1>你好，欢迎来到我的博客 👋</h1>
+        <p>这里记录我在前端开发、编程实践中的思考与笔记。</p>
+      </div>
+
+      <div class="toolbar">
+        <input type="search" id="search-input" class="search-input" placeholder="搜索文章…" aria-label="搜索文章" />
+        <div class="tag-list" id="tag-list" role="group" aria-label="标签筛选"></div>
+      </div>
+
+      <div class="post-grid" id="post-grid" aria-live="polite"></div>
+
+      <p class="empty-state" id="empty-state" hidden>没有找到匹配的文章 😢</p>
+    </section>
+
+    <!-- 文章详情视图 -->
+    <section id="post-view" hidden>
+      <button class="back-btn" id="back-btn" type="button">← 返回文章列表</button>
+      <article class="post-detail" id="post-detail"></article>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="about">
+    <div class="container footer-inner">
+      <p id="contact">© <span id="year"></span> 何昀倬 · 用 HTML + CSS + JS 构建</p>
+      <div class="footer-links">
+        <a href="#" id="footer-about">关于</a>
+        <a href="mailto:yunzhuohe@example.com">邮箱</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
