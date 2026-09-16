@@ -157,6 +157,60 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// 允许保留的 HTML 标签白名单
+const ALLOWED_TAGS = new Set([
+  "P", "H1", "H2", "H3", "H4", "H5", "H6", "UL", "OL", "LI",
+  "STRONG", "EM", "B", "I", "A", "CODE", "PRE", "BLOCKQUOTE",
+  "BR", "HR", "SPAN", "DIV", "TABLE", "THEAD", "TBODY", "TR", "TH", "TD", "IMG",
+]);
+// 需要整节点移除的危险标签
+const REMOVE_TAGS = new Set([
+  "SCRIPT", "STYLE", "IFRAME", "OBJECT", "EMBED", "FORM", "INPUT",
+  "BUTTON", "SELECT", "TEXTAREA", "LINK", "META", "BASE", "NOSCRIPT",
+  "TEMPLATE", "SVG", "MATH", "VIDEO", "AUDIO", "TRACK", "SOURCE",
+]);
+const ALLOWED_ATTRS = new Set(["href", "title", "src", "alt", "class", "datetime"]);
+
+// 白名单式 HTML 净化：过滤脚本与危险标签/属性，防止 XSS
+function sanitizeHtml(html) {
+  const template = document.createElement("template");
+  template.innerHTML = html; // template 内容为惰性，不会执行脚本
+
+  // 自底向上：先清理子节点，再决定当前节点去留
+  const clean = (parent) => {
+    for (const el of Array.from(parent.children)) {
+      clean(el);
+      const tag = el.tagName;
+      if (REMOVE_TAGS.has(tag)) {
+        el.remove();
+      } else if (!ALLOWED_TAGS.has(tag)) {
+        el.replaceWith(...el.childNodes); // unwrap：保留已清理的子节点
+      } else {
+        for (const attr of Array.from(el.attributes)) {
+          const name = attr.name.toLowerCase();
+          if (!ALLOWED_ATTRS.has(name) || name.startsWith("on")) {
+            el.removeAttribute(name);
+          } else if (name === "href" || name === "src") {
+            const value = attr.value.trim().toLowerCase();
+            if (value.startsWith("javascript:") || value.startsWith("data:")) {
+              el.removeAttribute(name);
+            }
+          }
+        }
+      }
+    }
+  };
+  clean(template.content);
+  return template.innerHTML;
+}
+
+// 去除 HTML 标签，仅保留纯文本（用于搜索匹配）
+function stripHtml(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || "";
+}
+
 /* ===== 渲染 ===== */
 function getAllTags() {
   const tags = new Set();
@@ -181,7 +235,7 @@ function getFilteredPosts() {
     const matchTag = activeTag === "全部" || post.tags.includes(activeTag);
     const matchSearch =
       !searchTerm ||
-      [post.title, post.excerpt, post.tags.join(" ")]
+      [post.title, post.excerpt, post.tags.join(" "), stripHtml(post.content)]
         .join(" ")
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -223,7 +277,7 @@ function renderPostDetail(post) {
         .map((t) => `<span class="card-tag">${escapeHtml(t)}</span>`)
         .join("")}
     </div>
-    <div class="detail-content">${post.content}</div>
+    <div class="detail-content">${sanitizeHtml(post.content)}</div>
   `;
   window.scrollTo({ top: 0 });
 }
