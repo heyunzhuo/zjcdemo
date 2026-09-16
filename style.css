@@ -56,7 +56,9 @@ a { color: var(--accent); text-decoration: none; }
   position: sticky;
   top: 0;
   z-index: 10;
+  background: var(--bg); /* 降级方案：不支持 color-mix 的浏览器回退到纯色背景 */
   background: color-mix(in srgb, var(--bg) 85%, transparent);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
